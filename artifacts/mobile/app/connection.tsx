@@ -26,7 +26,7 @@ export default function ConnectionScreen() {
   const [copied, setCopied] = useState(false);
 
   const domain = process.env.EXPO_PUBLIC_DOMAIN || "";
-  const displayUrl = domain ? `https://${domain}` : `http://${localIp}:${port}`;
+  const displayUrl = domain ? `https://${domain}/api/` : `http://${localIp}:${port}`;
   const qrUrl = displayUrl;
 
   const topPad = Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
