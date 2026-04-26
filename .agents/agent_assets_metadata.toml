@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "DgtDO68Z1xNXVX-AN0RQc"
+uri = "file://artifacts/mobile/assets/images/icon.png"
+type = "image"
+title = "quickdrop app icon"
