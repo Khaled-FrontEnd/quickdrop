@@ -1,5 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Platform } from "react-native";
 
 export interface TransferRecord {
@@ -74,17 +81,22 @@ export function ServerProvider({ children }: { children: React.ReactNode }) {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const domain = process.env.EXPO_PUBLIC_DOMAIN || "";
-  const serverUrl = domain ? `https://${domain}/api/files` : "";
+  // const serverUrl = domain ? `http://${domain}/api/files` : "";
+  const serverUrl = domain ? `http://${domain}/api/files` : "";
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEYS.FILES).then((val) => {
       if (val) {
-        try { setFiles(JSON.parse(val)); } catch {}
+        try {
+          setFiles(JSON.parse(val));
+        } catch {}
       }
     });
     AsyncStorage.getItem(STORAGE_KEYS.HISTORY).then((val) => {
       if (val) {
-        try { setHistory(JSON.parse(val)); } catch {}
+        try {
+          setHistory(JSON.parse(val));
+        } catch {}
       }
     });
   }, []);
@@ -113,14 +125,14 @@ export function ServerProvider({ children }: { children: React.ReactNode }) {
 
     pollRef.current = setInterval(async () => {
       try {
-        const res = await fetch(`https://${domain}/api/status`);
+        const res = await fetch(`http://192.168.0.186:3000/api/status`);
         if (res.ok) {
-          const data = await res.json() as { connected?: number };
+          const data = (await res.json()) as { connected?: number };
           setConnectedCount(data.connected ?? 0);
         }
       } catch {}
     }, 3000);
-  }, [detectIp, domain]);
+  }, [detectIp]);
 
   const stopSharing = useCallback(() => {
     setIsSharing(false);

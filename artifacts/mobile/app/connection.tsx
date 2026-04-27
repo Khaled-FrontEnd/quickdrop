@@ -26,11 +26,15 @@ export default function ConnectionScreen() {
   const [copied, setCopied] = useState(false);
 
   const domain = process.env.EXPO_PUBLIC_DOMAIN || "";
-  const displayUrl = domain ? `https://${domain}/api/` : `http://${localIp}:${port}`;
-  const qrUrl = displayUrl;
+  console.log(domain);
+  const SERVER_URL = "http://192.168.0.186:3000";
+  const displayUrl = SERVER_URL;
+  const qrUrl = SERVER_URL;
+
 
   const topPad = Platform.OS === "web" ? Math.max(insets.top, 67) : insets.top;
-  const bottomPad = Platform.OS === "web" ? Math.max(insets.bottom, 34) : insets.bottom;
+  const bottomPad =
+    Platform.OS === "web" ? Math.max(insets.bottom, 34) : insets.bottom;
 
   const handleCopy = async () => {
     await Clipboard.setStringAsync(displayUrl);
@@ -42,34 +46,82 @@ export default function ConnectionScreen() {
   return (
     <LinearGradient
       colors={colors.isDark ? ["#0A0F1E", "#0D1533"] : ["#F0F6FF", "#F8FAFF"]}
-      style={[styles.container, { paddingTop: topPad, paddingBottom: bottomPad }]}
+      style={[
+        styles.container,
+        { paddingTop: topPad, paddingBottom: bottomPad },
+      ]}
     >
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity
-            style={[styles.backBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+            style={[
+              styles.backBtn,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
             onPress={() => router.back()}
           >
             <Feather name="x" size={20} color={colors.foreground} />
           </TouchableOpacity>
-          <Text style={[styles.title, { color: colors.foreground, fontFamily: "Inter_700Bold" }]}>
+          <Text
+            style={[
+              styles.title,
+              { color: colors.foreground, fontFamily: "Inter_700Bold" },
+            ]}
+          >
             Connection
           </Text>
           <View style={styles.backBtn} />
         </View>
 
         {/* Status badge */}
-        <View style={[styles.statusBadge, { backgroundColor: isSharing ? colors.success + "20" : colors.muted }]}>
-          <View style={[styles.statusDot, { backgroundColor: isSharing ? colors.success : colors.mutedForeground }]} />
-          <Text style={[styles.statusLabel, { color: isSharing ? colors.success : colors.mutedForeground, fontFamily: "Inter_600SemiBold" }]}>
+        <View
+          style={[
+            styles.statusBadge,
+            {
+              backgroundColor: isSharing ? colors.success + "20" : colors.muted,
+            },
+          ]}
+        >
+          <View
+            style={[
+              styles.statusDot,
+              {
+                backgroundColor: isSharing
+                  ? colors.success
+                  : colors.mutedForeground,
+              },
+            ]}
+          />
+          <Text
+            style={[
+              styles.statusLabel,
+              {
+                color: isSharing ? colors.success : colors.mutedForeground,
+                fontFamily: "Inter_600SemiBold",
+              },
+            ]}
+          >
             {isSharing ? `Active · ${connectedCount} connected` : "Not sharing"}
           </Text>
         </View>
 
         {/* QR Code */}
-        <View style={[styles.qrCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.qrLabel, { color: colors.mutedForeground, fontFamily: "Inter_500Medium" }]}>
+        <View
+          style={[
+            styles.qrCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
+          <Text
+            style={[
+              styles.qrLabel,
+              { color: colors.mutedForeground, fontFamily: "Inter_500Medium" },
+            ]}
+          >
             Scan with laptop camera or browser
           </Text>
           <View style={[styles.qrContainer, { backgroundColor: "#FFFFFF" }]}>
@@ -80,49 +132,102 @@ export default function ConnectionScreen() {
               backgroundColor="#FFFFFF"
             />
           </View>
-          <Text style={[styles.qrNote, { color: colors.mutedForeground, fontFamily: "Inter_400Regular" }]}>
+          <Text
+            style={[
+              styles.qrNote,
+              { color: colors.mutedForeground, fontFamily: "Inter_400Regular" },
+            ]}
+          >
             Open in any browser on the same network
           </Text>
         </View>
 
         {/* URL card */}
-        <View style={[styles.urlCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <View
+          style={[
+            styles.urlCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
           <View style={styles.urlHeader}>
             <Feather name="link" size={16} color={colors.primary} />
-            <Text style={[styles.urlHeaderLabel, { color: colors.mutedForeground, fontFamily: "Inter_500Medium" }]}>
+            <Text
+              style={[
+                styles.urlHeaderLabel,
+                {
+                  color: colors.mutedForeground,
+                  fontFamily: "Inter_500Medium",
+                },
+              ]}
+            >
               Server URL
             </Text>
           </View>
-          <Text style={[styles.urlText, { color: colors.foreground, fontFamily: "Inter_600SemiBold" }]}>
+          <Text
+            style={[
+              styles.urlText,
+              { color: colors.foreground, fontFamily: "Inter_600SemiBold" },
+            ]}
+          >
             {displayUrl}
           </Text>
           <TouchableOpacity
-            style={[styles.copyBtn, { backgroundColor: copied ? colors.success : colors.primary }]}
+            style={[
+              styles.copyBtn,
+              { backgroundColor: copied ? colors.success : colors.primary },
+            ]}
             onPress={handleCopy}
             activeOpacity={0.8}
           >
             <Feather name={copied ? "check" : "copy"} size={16} color="#fff" />
-            <Text style={[styles.copyLabel, { fontFamily: "Inter_600SemiBold" }]}>
+            <Text
+              style={[styles.copyLabel, { fontFamily: "Inter_600SemiBold" }]}
+            >
               {copied ? "Copied!" : "Copy URL"}
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Instructions */}
-        <View style={[styles.instructionsCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.instructionsTitle, { color: colors.foreground, fontFamily: "Inter_600SemiBold" }]}>
+        <View
+          style={[
+            styles.instructionsCard,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
+        >
+          <Text
+            style={[
+              styles.instructionsTitle,
+              { color: colors.foreground, fontFamily: "Inter_600SemiBold" },
+            ]}
+          >
             How to connect
           </Text>
           {[
-            { step: "1", text: "Connect your laptop to the same Wi-Fi network" },
-            { step: "2", text: "Scan the QR code or open the URL in your browser" },
+            {
+              step: "1",
+              text: "Connect your laptop to the same Wi-Fi network",
+            },
+            {
+              step: "2",
+              text: "Scan the QR code or open the URL in your browser",
+            },
             { step: "3", text: "Upload and download files instantly" },
           ].map((item) => (
             <View key={item.step} style={styles.instructionRow}>
-              <View style={[styles.stepBadge, { backgroundColor: colors.primary }]}>
-                <Text style={[styles.stepNum, { fontFamily: "Inter_700Bold" }]}>{item.step}</Text>
+              <View
+                style={[styles.stepBadge, { backgroundColor: colors.primary }]}
+              >
+                <Text style={[styles.stepNum, { fontFamily: "Inter_700Bold" }]}>
+                  {item.step}
+                </Text>
               </View>
-              <Text style={[styles.stepText, { color: colors.foreground, fontFamily: "Inter_400Regular" }]}>
+              <Text
+                style={[
+                  styles.stepText,
+                  { color: colors.foreground, fontFamily: "Inter_400Regular" },
+                ]}
+              >
                 {item.text}
               </Text>
             </View>
@@ -131,9 +236,22 @@ export default function ConnectionScreen() {
 
         {/* Network info */}
         {localIp && (
-          <View style={[styles.networkCard, { backgroundColor: colors.secondary, borderColor: colors.border }]}>
+          <View
+            style={[
+              styles.networkCard,
+              { backgroundColor: colors.secondary, borderColor: colors.border },
+            ]}
+          >
             <Feather name="wifi" size={14} color={colors.primary} />
-            <Text style={[styles.networkText, { color: colors.secondaryForeground, fontFamily: "Inter_400Regular" }]}>
+            <Text
+              style={[
+                styles.networkText,
+                {
+                  color: colors.secondaryForeground,
+                  fontFamily: "Inter_400Regular",
+                },
+              ]}
+            >
               Device IP: {localIp}
             </Text>
           </View>
